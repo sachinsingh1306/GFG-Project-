@@ -4,7 +4,7 @@ import cors from "cors";
 import path from "path";
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
-import User from "../schema/User.js"; // Adjust the path as necessary
+import User from "../schema/User.js";
 
 const AuthController = express();
 

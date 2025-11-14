@@ -8,6 +8,7 @@ import View from "./components/View";
 import Checkout from "./components/Checkout";
 import ProtectedRoutes from "./components/ProtectedRoutes";
 import Profile from "./components/Profile";
+import ProductDetails from "./components/ProductDetails";
 
 const App = () => {
   return (
@@ -39,6 +40,7 @@ const App = () => {
         <Route path="/cart" element={<View />} />
         <Route path="/checkout" element={<Checkout/>}/>
         <Route path="/profile" element={<Profile/>}/>
+          <Route path="/product/:id" element={<ProductDetails/>} />
       </Routes>
     </>
   );

@@ -26,6 +26,7 @@ const Navbar = () => {
             placeholder="Search for products, brands and more"
             className="w-full px-4 py-2 text-gray-700 bg-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
+          <button className="absolute right-0 top-0 mt-2 mr-2">🔍</button>
         </div>
       </div>
 

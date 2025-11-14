@@ -5,6 +5,7 @@ import {
   increaseQuantity,
   decreaseQuantity,
 } from "../redux/cartSlice.js";
+import { Link } from "react-router-dom";
 
 const Card = ({ productObj }) => {
   const dispatch = useDispatch();
@@ -41,15 +42,18 @@ const Card = ({ productObj }) => {
   return (
     <div className="bg-white rounded-lg shadow-md overflow-hidden w-72 group transform transition-transform duration-300 hover:-translate-y-2">
       <figure className="relative w-full h-48 overflow-hidden">
-        <img
-          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-          src={productObj.thumbnail}
-          alt={productObj.title}
-        />
+        <Link to={`/product/${productObj.id}`}>
+          <img
+            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+            src={productObj.thumbnail}
+            alt={productObj.title}
+          />
+        </Link>
         <div className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
           {productObj.discountPercentage.toFixed(0)}% OFF
         </div>
       </figure>
+
       <div className="p-4 flex flex-col grow">
         <h2
           className="text-lg font-semibold text-gray-800 truncate"

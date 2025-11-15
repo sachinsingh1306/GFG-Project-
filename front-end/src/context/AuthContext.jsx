@@ -1,5 +1,5 @@
 import React from "react";
-import { createContext, useState, useContext, useEffect } from "react";
+import { createContext, useState, useContext } from "react";
 
 const AuthContext = createContext();
 
@@ -7,21 +7,7 @@ export const AuthProvider = ({ children }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem("isAuthenticated") === "true"
   );
-  
   const [user, setUser] = useState(JSON.parse(localStorage.getItem("user")));
-
-  useEffect(() => {
-    if (isLoggedIn && user?.email) {
-      fetch(`http://localhost:3000/auth/profile/${user.email}`)
-        .then((res) => res.json())
-        .then((data) => {
-          setUser(data);
-          localStorage.setItem("user", JSON.stringify(data));
-        })
-        .catch((err) => console.log(err));
-    }
-  }, [isLoggedIn, user]);
-
 
   const login = (userData) => {
     setIsLoggedIn(true);
@@ -38,7 +24,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ isLoggedIn, user, login, logout, setUser}}>
+    <AuthContext.Provider value={{ isLoggedIn, user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

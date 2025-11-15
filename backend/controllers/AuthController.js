@@ -38,10 +38,6 @@ AuthController.post("/login", async (req, res) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch)
       return res.status(400).json({ message: "Invalid credentials" });
-
-
-    
-
     res.status(200).json({ message: "Login successful", user });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -57,6 +53,7 @@ AuthController.put("/profile", async (req, res) => {
     }
     user.username = username;
     await user.save();
+    
     res.status(200).json({
       message: "Profile updated successfully",
       user: { id: user._id, username: user.username, email: user.email },
@@ -67,22 +64,19 @@ AuthController.put("/profile", async (req, res) => {
   }
 });
 
-
-
-// GET PROFILE
+// Get user profile
 AuthController.get("/profile/:email", async (req, res) => {
-  try {
-    const user = await User.findOne({ email: req.params.email });
-    if (!user) return res.status(404).json({ message: "User not found" });
+  const { email } = req.params;
+  const user = await User.findOne({ email });
+  if (!user) return res.status(404).json({ message: "User not found" });
 
-    res.status(200).json({
-      id: user._id,
-      username: user.username,
-      email: user.email,
-    });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+  res.status(200).json({
+    id: user._id,
+    username: user.username,
+    email: user.email,
+    avatar: user.avatar || "https://via.placeholder.com/150",
+  });
 });
+
 
 export default AuthController;

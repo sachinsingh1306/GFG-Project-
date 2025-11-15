@@ -16,6 +16,16 @@ const UserSchema = new mongoose.Schema({
     required: true,
     minlength: 5,
   },
+
+  // this details are add from the user profile only
+  
+  phone: { type: String, default: "" },
+  address: { type: String, default: "" },
+  bio: { type: String, default: "" },
+  avatar: { type: String, default: "" },
+
+
+  
 });
 
 const User = mongoose.model("User", UserSchema);

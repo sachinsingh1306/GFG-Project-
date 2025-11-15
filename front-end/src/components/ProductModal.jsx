@@ -16,10 +16,9 @@ const ProductModal = ({ product, onClose }) => {
 
   if (!product) return null;
 
-  const discountedPrice = (
-    product.price -
-    (product.price * product.discountPercentage) / 100
-  ).toFixed(2);
+  const price = product.price || 0;
+  const discount = product.discountPercentage || 0;
+  const discountedPrice = (price - (price * discount) / 100).toFixed(2);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center">
@@ -32,23 +31,23 @@ const ProductModal = ({ product, onClose }) => {
         </button>
         <div className="w-1/2 pr-6">
           <img
-            src={product.thumbnail}
-            alt={product.title}
+            src={product.thumbnail || ""}
+            alt={product.title || "Product"}
             className="w-full h-full object-contain rounded-lg"
           />
         </div>
         <div className="w-1/2 pl-6 border-l border-gray-200 flex flex-col">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">
-            {product.title}
+            {product.title || ""}
           </h2>
-          <p className="text-gray-600 mb-6">{product.description}</p>
+          <p className="text-gray-600 mb-6">{product.description || ""}</p>
           <div className="flex items-center mb-4">
             <div className="flex text-yellow-400">
               {[...Array(5)].map((_, i) => (
                 <svg
                   key={i}
                   className={`w-6 h-6 ${
-                    i < Math.round(product.rating)
+                    i < Math.round(product.rating || 0)
                       ? "text-yellow-400"
                       : "text-gray-300"
                   }`}
@@ -60,7 +59,7 @@ const ProductModal = ({ product, onClose }) => {
               ))}
             </div>
             <span className="ml-3 text-gray-600 text-lg">
-              ({product.rating.toFixed(1)})
+              ({(product.rating || 0).toFixed(1)})
             </span>
           </div>
           <div className="mb-6">
@@ -68,10 +67,10 @@ const ProductModal = ({ product, onClose }) => {
               ${discountedPrice}
             </span>
             <span className="ml-4 text-2xl text-gray-500 line-through">
-              ${product.price.toFixed(2)}
+              ${price.toFixed(2)}
             </span>
             <span className="ml-4 text-lg font-semibold text-red-500">
-              {product.discountPercentage.toFixed(0)}% OFF
+              {discount.toFixed(0)}% OFF
             </span>
           </div>
           <div className="mt-auto">

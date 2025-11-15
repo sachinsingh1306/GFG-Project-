@@ -21,7 +21,9 @@ const NavBar = () => {
 
   return (
     <nav className="bg-blue-500 p-4 text-white flex justify-between items-center shadow-md">
-      <h2 className="text-2xl font-bold">Ecom - Shop</h2>
+      <Link to="/home" className="hover:text-gray-200">
+        <h2 className="text-2xl font-bold">Ecom - Shop</h2>
+      </Link>
 
       {/* search functionality */}
       <div className="flex-1 max-w-md mx-4">

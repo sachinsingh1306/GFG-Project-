@@ -19,10 +19,13 @@ const Home = () => {
   });
 
   const categories = useMemo(
-    () => [...new Set(products.map((p) => p.category))],
+    () => [...new Set(products.map((p) => p.category || "Others"))],
     []
   );
-  const brands = useMemo(() => [...new Set(products.map((p) => p.brand))], []);
+  const brands = useMemo(
+    () => [...new Set(products.map((p) => p.brand || "Others"))],
+    []
+  );
 
   const handleFilterChange = (filterType, value) => {
     setFilters((prevFilters) => {
@@ -51,33 +54,36 @@ const Home = () => {
   };
 
   let filteredProducts = products.filter((product) => {
-    const searchMatch = product.title
-      .toLowerCase()
-      .includes(search.toLowerCase());
+    const title = product.title || "";
+    const searchMatch = title.toLowerCase().includes(search.toLowerCase());
     const categoryMatch =
       filters.category.length === 0 ||
-      filters.category.includes(product.category);
+      filters.category.includes(product.category || "Others");
     const brandMatch =
-      filters.brand.length === 0 || filters.brand.includes(product.brand);
-    const ratingMatch = product.rating >= filters.rating;
+      filters.brand.length === 0 ||
+      filters.brand.includes(product.brand || "Others");
+    const ratingMatch = (product.rating || 0) >= filters.rating;
     const priceMatch =
-      product.price >= filters.priceRange.min &&
-      product.price <= filters.priceRange.max;
+      (product.price || 0) >= filters.priceRange.min &&
+      (product.price || 0) <= filters.priceRange.max;
 
-    return (
-      searchMatch && categoryMatch && brandMatch && ratingMatch && priceMatch
-    );
+    return searchMatch && categoryMatch && brandMatch && ratingMatch && priceMatch;
   });
 
   if (sortBy) {
     filteredProducts.sort((a, b) => {
+      const priceA = a.price || 0;
+      const priceB = b.price || 0;
+      const ratingA = a.rating || 0;
+      const ratingB = b.rating || 0;
+
       switch (sortBy) {
         case "price-asc":
-          return a.price - b.price;
+          return priceA - priceB;
         case "price-desc":
-          return b.price - a.price;
+          return priceB - priceA;
         case "rating-desc":
-          return b.rating - a.rating;
+          return ratingB - ratingA;
         default:
           return 0;
       }
@@ -86,13 +92,12 @@ const Home = () => {
 
   const renderStars = (rating) => {
     const stars = [];
+    const r = Math.round(rating || 0);
     for (let i = 1; i <= 5; i++) {
       stars.push(
         <svg
           key={i}
-          className={`w-5 h-5 ${
-            i <= rating ? "text-yellow-400" : "text-gray-300"
-          }`}
+          className={`w-5 h-5 ${i <= r ? "text-yellow-400" : "text-gray-300"}`}
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -124,7 +129,7 @@ const Home = () => {
             <h3 className="font-semibold mb-3 text-gray-800 text-lg">Category</h3>
             <div className="space-y-3">
               {categories.map((category) => (
-                <div key={category} className="flex items-center">
+                <div key={category || Math.random()} className="flex items-center">
                   <input
                     type="checkbox"
                     id={category}
@@ -133,10 +138,7 @@ const Home = () => {
                     onChange={() => handleFilterChange("category", category)}
                     className="h-5 w-5 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                   />
-                  <label
-                    htmlFor={category}
-                    className="ml-3 text-gray-700"
-                  >
+                  <label htmlFor={category} className="ml-3 text-gray-700">
                     {category}
                   </label>
                 </div>
@@ -147,7 +149,7 @@ const Home = () => {
             <h3 className="font-semibold mb-3 text-gray-800 text-lg">Brand</h3>
             <div className="space-y-3">
               {brands.map((brand) => (
-                <div key={brand} className="flex items-center">
+                <div key={brand || Math.random()} className="flex items-center">
                   <input
                     type="checkbox"
                     id={brand}
@@ -164,9 +166,7 @@ const Home = () => {
             </div>
           </div>
           <div>
-            <h3 className="font-semibold mb-3 text-gray-800 text-lg">
-              Customer Rating
-            </h3>
+            <h3 className="font-semibold mb-3 text-gray-800 text-lg">Customer Rating</h3>
             <div className="space-y-3">
               {[4, 3, 2, 1].map((rating) => (
                 <div key={rating} className="flex items-center">
@@ -178,37 +178,12 @@ const Home = () => {
                     onChange={() => handleFilterChange("rating", rating)}
                     className="h-5 w-5 text-blue-600 border-gray-300 focus:ring-blue-500"
                   />
-                  <label
-                    htmlFor={`rating-${rating}`}
-                    className="ml-3 text-gray-700 flex items-center"
-                  >
+                  <label htmlFor={`rating-${rating}`} className="ml-3 text-gray-700 flex items-center">
                     {renderStars(rating)}
                     <span className="ml-2 text-sm">& above</span>
                   </label>
                 </div>
               ))}
-            </div>
-          </div>
-          <div>
-            <h3 className="font-semibold mb-3 text-gray-800 text-lg">Price Range</h3>
-            <div className="flex items-center">
-              <input
-                type="range"
-                min="0"
-                max="3000"
-                value={filters.priceRange.max}
-                onChange={(e) =>
-                  handleFilterChange("priceRange", {
-                    ...filters.priceRange,
-                    max: Number(e.target.value),
-                  })
-                }
-                className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
-                style={{ accentColor: '#3B82F6' }}
-              />
-            </div>
-            <div className="text-center mt-3 text-gray-700 font-medium">
-              ${filters.priceRange.min} - ${filters.priceRange.max}
             </div>
           </div>
         </div>
@@ -254,7 +229,7 @@ const Home = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
           {filteredProducts.map((product) => (
             <Card
-              key={product.id}
+              key={product.id || Math.random()} // fixed missing key warning
               productObj={product}
               onQuickView={handleQuickView}
             />

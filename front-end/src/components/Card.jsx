@@ -11,23 +11,20 @@ const Card = ({ productObj, onQuickView }) => {
   const productInCart = useSelector((state) =>
     state.cart.find((item) => item.id === productObj.id)
   );
-
   const quantity = productInCart?.quantity || 0;
 
-  const discountedPrice = (
-    productObj.price -
-    (productObj.price * productObj.discountPercentage) / 100
-  ).toFixed(2);
+  const price = productObj.price || 0;
+  const discount = productObj.discountPercentage || 0;
+  const discountedPrice = (price - (price * discount) / 100).toFixed(2);
 
   const renderStars = (rating) => {
     const stars = [];
+    const r = Math.round(rating || 0);
     for (let i = 1; i <= 5; i++) {
       stars.push(
         <svg
           key={i}
-          className={`w-5 h-5 ${
-            i <= Math.round(rating) ? "text-yellow-400" : "text-gray-300"
-          }`}
+          className={`w-5 h-5 ${i <= r ? "text-yellow-400" : "text-gray-300"}`}
           fill="currentColor"
           viewBox="0 0 20 20"
         >
@@ -43,11 +40,11 @@ const Card = ({ productObj, onQuickView }) => {
       <figure className="relative w-full h-48 overflow-hidden">
         <img
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-          src={productObj.thumbnail}
-          alt={productObj.title}
+          src={productObj.thumbnail || ""}
+          alt={productObj.title || "Product"}
         />
         <div className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full">
-          {productObj.discountPercentage.toFixed(0)}% OFF
+          {discount.toFixed(0)}% OFF
         </div>
         <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <button
@@ -61,20 +58,20 @@ const Card = ({ productObj, onQuickView }) => {
       <div className="p-4 flex flex-col grow">
         <h2
           className="text-lg font-semibold text-gray-800 truncate"
-          title={productObj.title}
+          title={productObj.title || ""}
         >
-          {productObj.title}
+          {productObj.title || ""}
         </h2>
         <div className="flex items-center mt-2">
           <div className="flex">{renderStars(productObj.rating)}</div>
           <span className="ml-2 text-sm text-gray-600">
-            ({productObj.rating.toFixed(1)})
+            ({(productObj.rating || 0).toFixed(1)})
           </span>
         </div>
         <div className="mt-2 flex items-baseline">
           <p className="text-xl font-bold text-gray-900">${discountedPrice}</p>
           <p className="ml-2 text-sm text-gray-500 line-through">
-            ${productObj.price.toFixed(2)}
+            ${price.toFixed(2)}
           </p>
         </div>
         <div className="mt-4 grow flex items-end">

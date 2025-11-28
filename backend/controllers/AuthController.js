@@ -78,5 +78,22 @@ AuthController.get("/profile/:email", async (req, res) => {
   });
 });
 
+// ---------------------- ADDED SHIPPING ROUTE ----------------------
+AuthController.post("/shipping", async (req, res) => {
+  try {
+    const { firstName, lastName, address, city, state, zip } = req.body;
+
+    console.log("Shipping Data Received:", req.body);
+
+    res.status(201).json({
+      message: "Shipping Data Saved Successfully",
+      data: req.body,
+    });
+  } catch (error) {
+    console.error("Shipping Error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+});
+
 
 export default AuthController;

@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 import bcrypt from "bcrypt";
 import User from "../schema/User.js";
 
+
 const AuthController = express();
 
 // Register
@@ -94,6 +95,4 @@ AuthController.post("/shipping", async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 });
-
-
 export default AuthController;
